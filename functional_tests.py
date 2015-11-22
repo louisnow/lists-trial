@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 import unittest
 
 class NewVisitorTest(unittest.TestCase):
@@ -9,26 +10,37 @@ class NewVisitorTest(unittest.TestCase):
 		
 	def tearDown(self):
 		self.browser.quit()
-	
-	def test_to_see_how_tests_run(self):
-		self.fail("first test failed")
-		
+			
 	def test_can_start_a_list_and_retrieve_it_later(self):
 		# accessing the homepage
 		self.browser.get('http://localhost:8000')
 
 		#page title mentions a To Do list
 		self.assertIn('To-Do',self.browser.title)
-		self.fail('Finish the test!')
+		header_text = self.browser.find_element_by_tag_name('h1').text
+		self.assertIn('To-Do',header_text)
 
+		#Can enter an item into the to do list
+		inputbox = self.browser.find_element_by_id('id_new_item')
+		self.assertEqual(inputbox.get_attribute('placeholder'),
+		'Enter a to-do item'
+		)
 
-#Can enter an item into the To do list
+		#An item is entered into the text box
+		inputbox.send_keys('Buy condoms')
 
-#An item is entered into the text box
+		#The page updates and now the list shows 
+		#the first item on the to do list
+		inputbox.send_keys(Keys.ENTER)
 
-#The page updates and now the list shows the first item on the to do list
+		table = self.browser.find_element_by_id('id_list_table')
+		rows = table.find_element_by_tag_name('tr')
+		self.assertTrue(
+			any(row.text == '1: Buy condoms' for row in rows)
+			)
 
 #There is still a text box into which an item can be entered
+		self.fail('Finish the test!')
 
 #Another item is added and it shows up as the second item in the to do list
 
