@@ -12,6 +12,7 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest:8000, host:8000
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
+  config.vm.synced_folder ".", "/home/vagrant/test"
   config.vm.box = "ubuntu/trusty32"
   config.vm.provision :shell, :path => "bootstrap.sh", :privileged => true
   config.vm.provision :shell, :path => "setup.sh", :privileged => true
